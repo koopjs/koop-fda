@@ -1,7 +1,7 @@
 {
   "name": "koop-fda",
   "description": "A FDA Food Recalls Provider for Koop",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "author": "Daniel Fenton",
   "bugs": {
     "url": "https://github.com/koopjs/koop-fda/issues"

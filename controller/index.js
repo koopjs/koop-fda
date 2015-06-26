@@ -24,7 +24,7 @@ var Controller = function (FDA, BaseController) {
       } else if (req.params.format) {
         // change geojson to json
         req.params.format = req.params.format.replace('geojson', 'json')
-        var dir = 'FDA' + '/' + req.params.id
+        var dir = 'FDA'
         console.log(dir)
         // build the file key as an MD5 hash that's a join on the paams and look for the file
         var toHash = JSON.stringify(req.params) + JSON.stringify(req.query)
@@ -40,7 +40,7 @@ var Controller = function (FDA, BaseController) {
               res.sendFile(path)
             }
           } else {
-            FDA.exportToFormat(req.params.format, dir, key, itemJson[0], {rootDir: FDA.files.localDir, large: true}, function (err, file) {
+            FDA.exportToFormat(req.params.format, dir, key, itemJson[0], {rootDir: FDA.files.localDir}, function (err, file) {
               if (err) return res.status(500).send(err)
               res.status(200).sendFile(Path.resolve(process.cwd(), file.file))
             })

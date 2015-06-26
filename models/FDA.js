@@ -7,7 +7,7 @@ var _ = require('underscore')
 var turfMerge = require('turf-merge')
 var states_dict = require('../lib/states.json')
 var states_dict_inverted = require('../lib/states_inverted.json')
-var states_geometries = require('../lib/states_geometries')
+var states_geometries = require('../lib/states_geometry_simplified.json')
 
 var FDA = function (koop) {
 var fda = koop.BaseModel(koop)
@@ -60,7 +60,6 @@ var key = 'food-recalls'
 
   fda.insertPartial = function (key, geojson, callback) {
     koop.Cache.insertPartial(type, key, geojson, 0, function (err, success) {
-      console.log('inside insert', err)
       if (err) {
         callback(err)
       } else {
@@ -143,7 +142,6 @@ var key = 'food-recalls'
         fda.translate(results, function (err, geojson) {
           if (err) return cb(err)
           fda.insertPartial(key, geojson, function (err, success) {
-            console.log('after insert', err)
             if (err) return cb(err)
             cb()
           })
