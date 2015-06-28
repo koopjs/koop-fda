@@ -16,42 +16,50 @@ var Controller = function (FDA, BaseController) {
     })
   }
 
-  controller.findRecalls = function (req, res) {
-    // Get the item
+  controller.findRecalls = function (req, res, callback) {
     FDA.getRecalls(req.query, function (error, itemJson) {
-      if (error) {
-        return res.status(500).send(error)
-      } else if (req.params.format) {
-        // change geojson to json
-        req.params.format = req.params.format.replace('geojson', 'json')
-        var dir = 'FDA'
-        console.log(dir)
-        // build the file key as an MD5 hash that's a join on the paams and look for the file
-        var toHash = JSON.stringify(req.params) + JSON.stringify(req.query)
-        var key = crypto.createHash('md5').update(toHash).digest('hex')
-        var filePath = ['files', dir, key].join('/')
-        console.log(filePath)
-        var fileName = key + '.' + req.params.format
-        FDA.files.exists(filePath, fileName, function (exists, path) {
-          if (exists) {
-            if (path.substr(0, 4) === 'http') {
-              res.redirect(path)
-            } else {
-              res.sendFile(path)
-            }
-          } else {
-            FDA.exportToFormat(req.params.format, dir, key, itemJson[0], {rootDir: FDA.files.localDir}, function (err, file) {
-              if (err) return res.status(500).send(err)
-              res.status(200).sendFile(Path.resolve(process.cwd(), file.file))
-            })
-          }
-        })
-      } else {
-        var geojson = itemJson
-        if (geojson && geojson.features && geojson.features.length) {
-          geojson.features = geojson.features.slice(0, req.query.limit || 100)
+      if (error) return res.status(500).send(error)
+      callback(itemJson)
+    })
+  }
+
+  controller.getRecalls = function (req, res) {
+    controller.findRecalls(req, res, function (recalls) {
+      res.status(200).json(recalls[0])
+    })
+  }
+
+  controller.exportFile = function (req, res) {
+    console.log('yello')
+    // change geojson to json
+    var format = req.params.format.replace('geojson', 'json')
+    delete req.params.format
+    var dir = 'FDA'
+    // build the file key as an MD5 hash that's a join on the params and look for the file
+    var toHash = JSON.stringify(req.params) + JSON.stringify(req.query)
+    var key = crypto.createHash('md5').update(toHash).digest('hex')
+    var filePath
+    if (format === 'zip') {
+      filePath = ['files', dir, key].join('/')
+    } else {
+      filePath = ['files', dir].join('/')
+    }
+    var fileName = key + '.' + format
+    console.log(filePath, fileName)
+    FDA.files.exists(filePath, fileName, function (exists, path) {
+      if (exists) {
+        if (path.substr(0, 4) === 'http') {
+          res.redirect(path)
+        } else {
+          res.sendFile(path)
         }
-        res.status(200).json(geojson[0])
+      } else {
+        controller.findRecalls(req, res, function (recalls) {
+          FDA.exportToFormat(format, dir, key, recalls[0], {rootDir: FDA.files.localDir}, function (err, file) {
+            if (err) return res.status(500).send(err)
+            res.status(200).sendFile(Path.resolve(process.cwd(), file.file))
+          })
+        })
       }
     })
   }

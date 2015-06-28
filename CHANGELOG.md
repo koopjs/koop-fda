@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.0.2] - 2015-06-28
+
+### Changed
+* Rows are not requested from the database if export file already exists
+
+### Fixed
+* Export files are reused when appropriate
+
 ## [0.0.1] - 2015-06-26
 
 ### Changed
@@ -16,4 +24,5 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * A single route that accesses all of api.fda.gov/food/enforncement
 * Enforcment events are enriched with the geometries of the states they affect
 
-[0.0.1]: https://github.com/Esri/koop-pgcache/compare/v0.0.0...v0.0.1
+[0.0.2]: https://github.com/koopjs/koop-fda/compare/v0.0.1...v0.0.2
+[0.0.1]: https://github.com/koopjs/koop-fda/compare/v0.0.0...v0.0.1
