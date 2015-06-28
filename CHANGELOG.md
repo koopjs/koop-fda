@@ -18,7 +18,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 * Exports no longer sent to undefined directory
 
-## [0.0.0] - 2015-06-26
+## 0.0.0 - 2015-06-26
 
 ### Added
 * A single route that accesses all of api.fda.gov/food/enforncement
