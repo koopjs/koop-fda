@@ -1,5 +1,5 @@
 
-[![npm version][npm-img]][npm-url][![Code Climate](https://codeclimate.com/github/koopjs/koop-fda/badges/gpa.svg)](https://codeclimate.com/github/koopjs/koop-fda)[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
+[![npm version][npm-img]][npm-url][![Build Status](https://travis-ci.org/koopjs/koop-fda.svg?branch=master)](https://travis-ci.org/koopjs/koop-fda)[![Code Climate](https://codeclimate.com/github/koopjs/koop-fda/badges/gpa.svg)](https://codeclimate.com/github/koopjs/koop-fda)[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
 
 # koop-fda
 
