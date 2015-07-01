@@ -1,5 +1,5 @@
 
-[![npm version][npm-img]][npm-url]
+[![npm version][npm-img]][npm-url][![Code Climate](https://codeclimate.com/github/koopjs/koop-fda/badges/gpa.svg)](https://codeclimate.com/github/koopjs/koop-fda)
 
 # koop-fda
 
