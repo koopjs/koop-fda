@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "koop": "*",
+    "mocha": "^2.2.5",
     "nock": "^2.6.0",
     "should": "~4.0.4",
     "sinon": "~1.10.3",
