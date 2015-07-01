@@ -1,3 +1,6 @@
+
+[![npm version][npm-img]][npm-url]
+
 # koop-fda
 
 > A FDA Food Recall Enforcement provider for Koop 
@@ -80,3 +83,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 A copy of the license is available in the repository's [license.txt](license.txt) file.
+
+[npm-img]: https://img.shields.io/npm/v/koop-fda.svg?style=flat-square
+[npm-url]: https://www.npmjs.com/package/koop-fda
