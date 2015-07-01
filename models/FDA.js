@@ -3,19 +3,19 @@ var request = require('request')
 // used to manage control flow
 var async = require('async')
 // used to create hashes that fingerprints a given request
-var _ = require('underscore')
 var turfMerge = require('turf-merge')
 var states_dict = require('../lib/states.json')
 var states_dict_inverted = require('../lib/states_inverted.json')
 var states_geometries = require('../lib/states_geometry_simplified.json')
 
 var FDA = function (koop) {
-var fda = koop.BaseModel(koop)
-var type = 'FDA'
-var key = 'food-recalls'
+  var fda = koop.BaseModel(koop)
+  var type = 'FDA'
+  var key = 'food-recalls'
 
   fda.getRecalls = function (options, callback) {
     // check the cache for data with this type & id
+    console.log(options)
     koop.Cache.get(type, key, options || {layer: 0}, function (err, entry) {
       if (err) {
         fda.search(key, function (err, geojson) {
@@ -35,13 +35,16 @@ var key = 'food-recalls'
     // get the first page and figure out the count
     fda.getPage(url, function (err, results) {
       if (err) return callback(err)
-      var count = results.meta.results.total_count
       fda.translate(results, function (err, geojson) {
         if (err) return callback(err)
         geojson.name = 'Food recalls'
         fda.insert(key, geojson, function (err, success) {
+          if (err) return callback(err)
           callback(null, [{status: 'processing'}])
-          fda.scrape()
+          fda.scrape(function (err, info) {
+            if (err) koop.log.error(err)
+            if (info) koop.log.info(info)
+          })
         })
       })
     })
@@ -73,7 +76,6 @@ var key = 'food-recalls'
       url: url,
       gzip: true
     }
-    console.log(url)
     request.get(options, function (err, res, body) {
       if (err) return callback(err)
       var results
@@ -86,7 +88,7 @@ var key = 'food-recalls'
     })
   }
 
-  fda.scrape = function () {
+  fda.scrape = function (callback) {
     // have to split the data into two groups because the API won't allow a skip parameter over 5000
     var groups = ['[2000-06-01+TO+2014-03-31]', '[2014-04-01+TO+2015-12-31]']
     var base = 'https://api.fda.gov/food/enforcement.json?'
@@ -103,7 +105,7 @@ var key = 'food-recalls'
     }, function (err) {
       if (err) console.log(err)
       fda.createQueue('food-recalls', pages, function (err, info) {
-        console.log(err, info)
+        callback(err, info)
       })
     })
   }
@@ -114,7 +116,6 @@ var key = 'food-recalls'
       gzip: true,
       url: url
     }
-    console.log(url)
     request.get(options, function (err, res, body) {
       if (err) return callback(err)
       var count = JSON.parse(body).meta.results.total
@@ -143,7 +144,7 @@ var key = 'food-recalls'
           if (err) return cb(err)
           fda.insertPartial(key, geojson, function (err, success) {
             if (err) return cb(err)
-            cb()
+            cb(null, 'Successfully scraped the FDA endpoint')
           })
         })
       })
@@ -181,7 +182,6 @@ var key = 'food-recalls'
   }
 
   fda.buildGeometry = function (result) {
-    var geometries = []
     var matchedStates = fda.matchStates(result.distribution_pattern)
     var geojson = {
       type: 'FeatureCollection',
@@ -189,7 +189,7 @@ var key = 'food-recalls'
     }
     matchedStates.forEach(function (state) {
       var feature = {
-        type: "Feature"
+        type: 'Feature'
       }
       feature.geometry = states_geometries[state]
       geojson.features.push(feature)
@@ -208,7 +208,7 @@ var key = 'food-recalls'
   }
 
   fda.matchStates = function (distribution) {
-    var candidates = distribution.replace(/[,:&.;!]/g,'').split(' ')
+    var candidates = distribution.replace(/[,:&.;!]/g, '').split(' ')
     var states = []
     candidates.forEach(function (candidate) {
       var state = fda.normalizeState(candidate)
@@ -217,7 +217,7 @@ var key = 'food-recalls'
     return states
   }
 
-  fda.normalizeState = function(candidate) {
+  fda.normalizeState = function (candidate) {
     // checks to see if the token from the distribution string is a US state
     // todo: normalize on caps
     if (states_dict[candidate]) {
