@@ -3,6 +3,8 @@
 
 # koop-fda
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/koopjs/koop-fda.svg)](https://greenkeeper.io/)
+
 > A FDA Food Recall Enforcement provider for Koop 
 
 ## How it works
