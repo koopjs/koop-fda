@@ -18,7 +18,7 @@
 
 - To download the full dataset simply append your requested file type to the end of this URL: http://koop.dc.esri.com/FDA
   - Options are: `[csv, zip, kml, geojson]`
-- If you wish to filter the data, append `?where=` followed by a [URI Encoded](http://www.w3schools.com/tags/ref_urlencode.asp) SQL string 
+- If you wish to filter the data, append `?where=` followed by a [URI Encoded](http://www.w3schools.com/tags/ref_urlencode.asp) [SQL string](https://www.scaler.com/topics/sql/string-literal/) 
   - [See this](http://meyerweb.com/eric/tools/dencoder/) for an easy in browser encoder
   - The full list of available parameters is here: https://open.fda.gov/food/enforcement/
 
